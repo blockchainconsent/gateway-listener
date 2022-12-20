@@ -1,0 +1,644 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Consent Manager Gateway Listener",
+        "description": "Swagger Definition for Consent Manager Gateway Listener",
+        "version": "1.0.0"
+    },
+    "tags": [
+        {
+            "name": "Users"
+        },
+        {
+            "name": "Failed Consents"
+        }
+    ],
+    "servers": [],
+    "paths": {
+        "/gateway-listener/api/v1/login": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "User login",
+                "description": "Login as a registered user",
+                "operationId": "user_login",
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/UserLogin"
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful user login",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserLoginResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/UserLoginError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/UserLoginServerError"
+                    }
+                }
+            }
+        },
+        "/gateway-listener/api/v1/failed-consents": {
+            "get": {
+                "tags": [
+                    "Failed Consents"
+                ],
+                "summary": "Get Failed Consents API",
+                "operationId": "get_failed_consents",
+                "description": "Gets Failed Consents API",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    { "$ref": "#/components/requestParams/tenantID" },
+                    { "$ref": "#/components/requestParams/txID" },
+                    { "$ref": "#/components/requestParams/latestTimestamp" }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully get failed consent messages",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BasicResponseGetFailedConsents"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/FailedConsentBadRequest"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFoundError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/FailedConsentServerError"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Failed Consents"
+                ],
+                "summary": "Resubmit Failed Consents API",
+                "operationId": "resubmit_failed_consents",
+                "description": "Resubmits Failed Consents API",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    { "$ref": "#/components/requestParams/tenantID" },
+                    { "$ref": "#/components/requestParams/txID" },
+                    { "$ref": "#/components/requestParams/latestTimestamp" }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully resubmited failed consent messages",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BasicResponseResubmitFailedConsents"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/FailedConsentBadRequest"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFoundError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/FailedConsentServerError"
+                    }
+                }
+            }
+        },
+        "/gateway-listener/api/v1/consent-status": {
+            "get": {
+                "tags": [
+                    "Consents Statuses"
+                ],
+                "summary": "Get Consents Statuses API",
+                "operationId": "get_consents_statuses",
+                "description": "Gets Consents Statuses API",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    { "$ref": "#/components/requestParams/tenantID" },
+                    { "$ref": "#/components/requestParams/txID" },
+                    { "$ref": "#/components/requestParams/topic" },
+                    { "$ref": "#/components/requestParams/status" },
+                    { "$ref": "#/components/requestParams/latestTimestamp" }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully get consents statuses",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BasicResponseGetConsentsStatuses"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/FailedConsentBadRequest"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFoundError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/FailedConsentServerError"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        },
+        "schemas": {
+            "UserLoginRequest": {
+                "type": "object",
+                "required": [
+                    "email",
+                    "password"
+                ],
+                "description": "User Login Request object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "description": "User email",
+                        "minLength": 1,
+                        "maxLength": 9999,
+                        "pattern": ".+",
+                        "example": "email@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "User password",
+                        "minLength": 1,
+                        "maxLength": 9999,
+                        "pattern": ".+",
+                        "example": "password123"
+                    }
+                }
+            },
+            "UserLoginResponse": {
+                "type": "object",
+                "properties": {
+                    "access_token": {
+                        "type": "string",
+                        "description": "Access token for login",
+                        "example": "xxxxxxxxx"
+                    },
+                    "id_token": {
+                        "type": "string",
+                        "description": "ID of access token for login",
+                        "example": "ID token"
+                    },
+                    "token_type": {
+                        "type": "string",
+                        "description": "Type of access token for login",
+                        "example": "type"
+                    },
+                    "expires_in": {
+                        "type": "integer",
+                        "description": "The time when login has expired",
+                        "example": 1640000000
+                    },
+                    "scope": {
+                        "type": "string",
+                        "description": "Scope of UserLoginResponse",
+                        "example": "scope"
+                    }
+                },
+                "description": "Object of UserLoginResponse",
+                "example": {
+                    "access_token": "xxxxxxxxx",
+                    "id_token": "token id",
+                    "token_type": "type",
+                    "expires_in": 1640000000,
+                    "scope": "scope"
+                }
+            },
+            "BasicResponseResubmitFailedConsents": {
+                "type": "object",
+                "description": "Basic Response Resubmit Failed Consents object",
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "description": "Status of response"
+                    },
+                    "resubmitFailedConsents": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "x-cm-tenantid": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 9999,
+                                    "pattern": ".+",
+                                    "example": "tenantid"
+                                },
+                                "x-cm-txn-id": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 9999,
+                                    "pattern": ".+",
+                                    "example": "txnid"
+                                },
+                                "numRetriesTopic": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 9999,
+                                    "pattern": ".+",
+                                    "example": "numRetriesTopic"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "BasicResponseGetFailedConsents": {
+                "type": "object",
+                "description": "Basic Response Get Failed Consents object",
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "description": "Status of response"
+                    },
+                    "result": {
+                        "type": "array",
+                        "description": "Result array of response",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "_id": {
+                                    "type": "string",
+                                    "description": "ID of failed consent",
+                                    "minLength": 1,
+                                    "maxLength": 9999,
+                                    "pattern": ".+",
+                                    "example": "id"
+                                },
+                                "_rev": {
+                                    "type": "string",
+                                    "description": "Rev of failed consent",
+                                    "minLength": 1,
+                                    "maxLength": 9999,
+                                    "pattern": ".+",
+                                    "example": "rev"
+                                },
+                                "payload": {
+                                    "type": "string",
+                                    "description": "Payload of failed consent",
+                                    "minLength": 1,
+                                    "maxLength": 9999,
+                                    "pattern": ".+",
+                                    "example": "payload"
+                                },
+                                "topic": {
+                                    "type": "string",
+                                    "description": "Topic of failed consent",
+                                    "minLength": 1,
+                                    "maxLength": 9999,
+                                    "pattern": ".+",
+                                    "example": "topic"
+                                },
+                                "failureReasons": {
+                                    "type": "string",
+                                    "description": "Reasons of failed consent",
+                                    "minLength": 1,
+                                    "maxLength": 9999,
+                                    "pattern": ".+",
+                                    "example": "reason"
+                                },
+                                "latestTimestamp": {
+                                    "type": "integer",
+                                    "description": "Timestamp of failed consent",
+                                    "example": "timestamp"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "BasicResponseGetConsentsStatuses": {
+                "type": "object",
+                "description": "Basic Response Get Consents Statuses object",
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "description": "Status of response"
+                    },
+                    "result": {
+                        "type": "array",
+                        "description": "Result array of response",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "_id": {
+                                    "type": "string",
+                                    "description": "ID of consent",
+                                    "minLength": 1,
+                                    "maxLength": 9999,
+                                    "pattern": ".+",
+                                    "example": "id"
+                                },
+                                "_rev": {
+                                    "type": "string",
+                                    "description": "Rev of consent",
+                                    "minLength": 1,
+                                    "maxLength": 9999,
+                                    "pattern": ".+",
+                                    "example": "rev"
+                                },
+                                "txID": {
+                                    "type": "string",
+                                    "description": "Transaction ID of consent",
+                                    "minLength": 1,
+                                    "maxLength": 9999,
+                                    "pattern": ".+",
+                                    "example": "txID"
+                                },
+                                "topic": {
+                                    "type": "string",
+                                    "description": "Topic of consent",
+                                    "minLength": 1,
+                                    "maxLength": 9999,
+                                    "pattern": ".+",
+                                    "example": "topic"
+                                },
+                                "status": {
+                                    "type": "string",
+                                    "description": "Status of consent",
+                                    "minLength": 1,
+                                    "maxLength": 9999,
+                                    "pattern": ".+",
+                                    "example": "status"
+                                },
+                                "delay": {
+                                    "type": "integer",
+                                    "description": "Delay of consent"
+                                },
+                                "numRetriesTotal": {
+                                    "type": "integer",
+                                    "description": "Total num of retries"
+                                },
+                                "failureReasons": {
+                                    "type": "string",
+                                    "description": "Reasons of failed consent",
+                                    "minLength": 1,
+                                    "maxLength": 9999,
+                                    "pattern": ".+",
+                                    "example": "failureReason"
+                                },
+                                "latestTimestamp": {
+                                    "type": "integer",
+                                    "description": "Timestamp of consent"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "ServerErrorResponse": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "description": "Message of Server Error",
+                        "example": "Response",
+                        "minLength": 1,
+                        "maxLength": 9999,
+                        "pattern": ".+"
+                    },
+                    "status": {
+                        "type": "integer",
+                        "description": "Response code of BasicResponse",
+                        "example": 200
+                    }
+                },
+                "description": "Server Error Response object"
+            },
+            "BasicErrorMessage": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "description": "Response code of BasicResponse",
+                        "example": 200
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "Message of Basic Error",
+                        "example": "Response",
+                        "minLength": 1,
+                        "maxLength": 9999,
+                        "pattern": ".+"
+                    }
+                },
+                "description": "Basic Error Response object"
+            },
+            "UserErrorMessage": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "description": "Response code of BasicResponse",
+                        "example": 200
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "Message of Basic Error",
+                        "minLength": 1,
+                        "maxLength": 9999,
+                        "pattern": ".+",
+                        "example": "Failed to login user: The email or password that you entered is incorrect."
+                    }
+                },
+                "description": "Basic Error Response object"
+            },
+            "ServerErrorMessage": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "description": "Response code of BasicResponse",
+                        "example": 200
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "Message of Basic Error",
+                        "minLength": 1,
+                        "maxLength": 9999,
+                        "pattern": ".+",
+                        "example": "Failed to login user with AppID: Something went wrong"
+                    }
+                },
+                "description": "Basic Error Response object"
+            }
+        },
+        "requestParams": {
+            "tenantID": {
+                "name": "tenantID",
+                "in": "query",
+                "description": "TenantID",
+                "required": true,
+                "schema": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 9999,
+                    "pattern": ".+"
+                }
+            },
+            "txID": {
+                "name": "txID",
+                "in": "query",
+                "description": "Transaction ID",
+                "schema": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 9999,
+                    "pattern": ".+"
+                }
+            },
+            "topic": {
+                "name": "topic",
+                "in": "query",
+                "description": "Topic",
+                "schema": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 9999,
+                    "pattern": ".+"
+                }
+            },
+            "status": {
+                "name": "status",
+                "in": "query",
+                "description": "\"retrying\" by default.",
+                "schema": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 9999,
+                    "pattern": ".+"
+                }
+            },
+            "latestTimestamp": {
+                "name": "latestTimestamp",
+                "in": "query",
+                "description": "Returns all consents older than X. From yesterday by default.",
+                "schema": {
+                    "type": "integer",
+                    "format": "int64"
+                }
+            }
+        },
+        "requestBodies": {
+            "UserLogin": {
+                "description": "Login credentials",
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/UserLoginRequest"
+                        }
+                    }
+                }
+            }
+        },
+        "responses": {
+            "UserLoginError": {
+                "description": "Failed login due to invalid credentials",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/UserErrorMessage"
+                        }
+                    }
+                }
+            },
+            "UserLoginServerError": {
+                "description": "Failed login due to server error",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ServerErrorMessage"
+                        }
+                    }
+                }
+            },
+            "FailedConsentBadRequest": {
+                "description": "Bad request",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/BasicErrorMessage"
+                        }
+                    }
+                }
+            },
+            "FailedConsentServerError": {
+                "description": "Server error",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ServerErrorResponse"
+                        }
+                    }
+                }
+            },
+            "UnauthorizedError": {
+                "description": "Logged in user is unauthorized to make this request",
+                "content": {
+                    "text/plain": {
+                        "example": "Unauthorized"
+                    }
+                }
+            },
+            "NotFoundError": {
+                "description": "Resource was not found",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/BasicErrorMessage"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

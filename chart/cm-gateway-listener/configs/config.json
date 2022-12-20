@@ -1,0 +1,96 @@
+{
+    "port": "{{ .Values.config.port }}",
+    "httpsEnabled": "{{ .Values.config.httpsEnabled }}",
+    "logLevel": "{{ .Values.config.logLevel }}",
+    "httpClient": {
+        "isOmrEndpoint": "{{ .Values.httpClient.isOmrEndpoint }}",
+        "authUser": "{{ .Values.httpClient.authUser }}",
+        "authPassword": "not-used",
+        "authLoginOrg": "{{ .Values.httpClient.authLoginOrg }}",
+        "authLoginChannel": "{{ .Values.httpClient.authLoginChannel }}",
+        "omrApiProtocol": "{{ .Values.httpClient.omrApiProtocol }}",
+        "simpleApiProtocol": "{{ .Values.httpClient.simpleApiProtocol }}",
+        "apiHost": "{{ .Values.httpClient.apiHost }}",
+        "omrApiPort": "{{ .Values.httpClient.omrApiPort }}",
+        "simpleApiPort": "{{ .Values.httpClient.simpleApiPort }}",
+        "omrRegisterConsentEndpoint": "/omr/api/v1/users/patient_register_and_consent",
+        "simpleRegisterConsentEndpoint": "/simple-consent/api/v1/consent",
+        "healthConsentEndpoint": "/simple-consent/api/v1/health",
+        "omrLoginEndpoint": "/common/api/v1/login"
+    },
+    "eventStreams": {
+        "failureConsumers": {
+            "retry1m": {
+                "id": 1,
+                "failureGroupId": "{{ .Values.eventStreams.consumer.failureGroupId1 }}",
+                "failureTopicName": "{{ .Values.eventStreams.failureTopicName1 }}",
+                "delay": {{ .Values.eventStreams.delay1 }}
+            },
+            "retry30m": {
+                "id": 2,
+                "failureGroupId": "{{ .Values.eventStreams.consumer.failureGroupId2 }}",
+                "failureTopicName": "{{ .Values.eventStreams.failureTopicName2 }}",
+                "delay": {{ .Values.eventStreams.delay2 }}
+            },
+            "retry2h": {
+                "id": 3,
+                "failureGroupId": "{{ .Values.eventStreams.consumer.failureGroupId3 }}",
+                "failureTopicName": "{{ .Values.eventStreams.failureTopicName3 }}",
+                "delay": {{ .Values.eventStreams.delay3 }}
+            }
+        },
+        "healthTopicName": "{{ .Values.eventStreams.healthTopicName}}",
+        "inputTopicName": "{{ .Values.eventStreams.inputTopicName }}",
+        "clientId": "{{ .Values.eventStreams.consumer.clientId }}",
+        "inputGroupId": "{{ .Values.eventStreams.consumer.inputGroupId }}",
+        "brokers": "{{ .Values.eventStreams.consumer.brokers }}",
+        "proxyEnabled": "{{ .Values.eventStreams.consumer.proxyEnabled }}",
+        "proxyBrokersPorts": "{{ .Values.eventStreams.consumer.proxyBrokersPorts }}",
+        "keepAliveDelay": "{{ .Values.eventStreams.consumer.keepAliveDelay }}",
+        "proxyHost": "{{ .Values.eventStreams.consumer.proxyHost }}",
+        "proxyConnectionTimeout": 5000,
+        "securityProtocol": "sasl_ssl",
+        "sasl": {
+            "mechanisms": "PLAIN",
+            "username": "{{ .Values.eventStreams.consumer.sasl.username }}",
+            "password": "{{ .Values.eventStreams.consumer.sasl.password }}"
+        },
+        "retry": {
+            "initialRetryTime": 300,
+            "retries": 5
+        },
+        "maxBytesPerPartitionForConsumer": {{ .Values.eventStreams.consumer.maxBytesPerPartitionForConsumer }},
+        "numPartitionsForInputTopic": {{ .Values.eventStreams.consumer.numPartitionsForInputTopic }},
+        "sessionTimeoutForConsumer": 60000
+    },
+    "defaults" : {
+        "registerConsent": {
+            "name": "{{ .Values.defaults.name }}",
+            "secret": "not-used",
+            "email": "{{ .Values.defaults.email }}"
+        }
+    },
+    "appID": {
+        "retries": 1,
+        "retryDelay": 3000,
+        "timeout": 10000
+    },
+    "keyProtect": {
+        "retries": 1,
+        "retryDelay": 3000,
+        "timeout": 10000
+    },
+    "databaseConfig": {
+        "connection": {
+            "url": "{{ .Values.databaseConfig.connection.url }}",
+            "username": "{{ .Values.databaseConfig.connection.username }}",
+            "password": "{{ .Values.databaseConfig.connection.password }}",
+            "account": "{{ .Values.databaseConfig.connection.account }}",
+            "iamApiKey": "{{ .Values.databaseConfig.connection.iamApiKey }}",
+            "timeout": "{{ .Values.databaseConfig.connection.timeout }}"
+        },
+        "dbNameConsentStatus": "{{ .Values.databaseConfig.dbNameConsentStatus }}",
+        "dbPartitionKey": "{{ .Values.databaseConfig.dbPartitionKey }}",
+        "dbNameFailures": "{{ .Values.databaseConfig.dbNameFailures }}"
+    }
+}

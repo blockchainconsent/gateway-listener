@@ -1,0 +1,53 @@
+{{- if .Values.cluster.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ template "chart.fullname" . }}-ingress
+  namespace: {{.Release.Namespace}}
+  labels:
+{{ include "chart.labels" . | indent 4 }}
+  annotations:
+    kubernetes.io/ingress.class: {{ .Values.cluster.ingress.class }}
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "{{ .Values.cluster.ingress.proxyReadTimeout }}"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "{{ .Values.cluster.ingress.proxyConnectTimeout }}"
+    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+    nginx.ingress.kubernetes.io/limit-rps: "{{ .Values.cluster.ingress.limitRps }}"
+spec:
+  rules:
+    - host: {{ .Values.cluster.ingress.subdomain }}
+      http:
+        paths:
+          - path: /gateway-listener/api-docs
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ template "chart.fullname" . }}-svc
+                port:
+                  number: {{ .Values.service.externalPort }}
+          - path: /gateway-listener/api/v1/health
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ template "chart.fullname" . }}-svc
+                port:
+                  number: {{ .Values.service.externalPort }}
+          - path: /gateway-listener/api/v1
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ template "chart.fullname" . }}-svc
+                port:
+                  number: {{ .Values.service.externalPort }}
+          - path: /gateway-listener/api/v1/failed-consents
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ template "chart.fullname" . }}-svc
+                port:
+                  number: {{ .Values.service.externalPort }}
+
+  tls:
+    - hosts:
+        - {{ .Values.cluster.ingress.subdomain }}
+      secretName: {{ .Values.cluster.ingress.secretName }}
+{{- end }}

@@ -1,0 +1,9 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ template "chart.fullname" . }}-env-configmap
+data:
+  DEV_MODE: {{ .Values.databaseConfig.devMode | quote }}
+  APP_ID_URL: {{ .Values.appId.url | quote}}
+  KEYPROTECT_URL: {{ .Values.keyProtect.endPoint | quote}}
+  KEYPROTECT_GUID: {{ .Values.keyProtect.guid | quote}}

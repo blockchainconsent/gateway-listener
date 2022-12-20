@@ -1,0 +1,111 @@
+nameOverride: "cm-gateway-listener"
+fullnameOverride: "cm-gateway-listener"
+environment: "development"
+
+replicaCount: 2
+annotations:
+  TOOLCHAIN_ID: null
+  GIT_URL: null
+  GIT_BRANCH: null
+  GIT_COMMIT: null
+  USER_NAME: null
+  APPLICATION_VERSION: null
+image:
+  repository : <helm-repo>
+  tag: <helm-tag>
+  pullPolicy: IfNotPresent
+  pullSecret: regsecret
+config:
+  probes: "enabled"
+  secretName : "cm-tls-secret-crt"
+  logLevel:
+  port:
+  httpsEnabled:
+appId:
+  url: "null"
+  tenantId: "null"
+  clientId: "null"
+  clientSecret: "null"
+  iamKey: "null"
+keyProtect:
+  endPoint: "null"
+  guid: "null"
+  iamKey: "null"
+httpClient:
+  isOmrEndpoint: false
+  authUser: "not used"
+  authPassword: "not used"
+  authLoginOrg: "not used"
+  authLoginChannel: "not used"
+  omrApiProtocol: "http"
+  simpleApiProtocol: "https"
+  apiHost:
+  omrApiPort: 3000
+  simpleApiPort: 3002
+eventStreams:
+  healthTopicName:
+  inputTopicName:
+  failureTopicName1:
+  delay1:
+  failureTopicName2:
+  delay2:
+  failureTopicName3:
+  delay3:
+  consumer:
+    clientId:
+    inputGroupId:
+    failureGroupId1:
+    failureGroupId2:
+    failureGroupId3:
+    brokers:
+    proxyEnabled:
+    proxyBrokersPorts:
+    keepAliveDelay: 60000
+    proxyHost:
+    sasl:
+      username:
+      password:
+    numPartitionsForInputTopic:
+    maxBytesPerPartitionForConsumer: 4000
+defaults:
+  name: "not used"
+  secret: "not used"
+  email: "not used"
+databaseConfig:
+  connection:
+    url: ""
+    username: ""
+    password: ""
+    account: ""
+    iamApiKey: ""
+    timeout: 5000
+  dbPartitionKey: "cm"
+  dbNameFailures: "failures"
+  dbNameConsentStatus: "consent-status"
+  devMode: false
+service:
+  type: ClusterIP
+  externalPort: 3003
+  internalPort: 3003
+
+cluster:
+  ingress:
+    enabled: true
+    class: "null"
+    subdomain: "null"
+    secretName: "null"
+    proxyReadTimeout: 300s
+    proxyConnectTimeout: 300s
+    limitRps: 1000
+
+resources:
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  limits:
+    cpu: 200m
+    memory: 256Mi
+  requests:
+    cpu: 50m
+    memory: 128Mi

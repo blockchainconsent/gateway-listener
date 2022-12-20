@@ -1,0 +1,96 @@
+{
+    "port": 3003,
+    "httpsEnabled": true,
+    "logLevel": "debug",
+    "httpClient": {
+        "isOmrEndpoint": false,
+        "authUser": "",
+        "authPassword": "",
+        "authLoginOrg": "",
+        "authLoginChannel": "",
+        "omrApiProtocol": "http",
+        "simpleApiProtocol": "https",
+        "apiHost": "127.0.0.1",
+        "omrApiPort": "3000",
+        "simpleApiPort": "3002",
+        "omrRegisterConsentEndpoint": "/omr/api/v1/users/patient_register_and_consent",
+        "simpleRegisterConsentEndpoint": "/simple-consent/api/v1/consent",
+        "healthConsentEndpoint": "/simple-consent/api/v1/health",
+        "omrLoginEndpoint": "/common/api/v1/login"
+    },
+    "eventStreams": {
+        "failureConsumers": {
+            "retry1m": {
+                "id": 1,
+                "failureGroupId": "gateway-listener-group-dev-failure-1",
+                "failureTopicName": "failure-queue-retry1m",
+                "delay": 60000
+            },
+            "retry30m": {
+                "id": 2,
+                "failureGroupId": "gateway-listener-group-dev-failure-2",
+                "failureTopicName": "failure-queue-retry30m",
+                "delay": 1800000
+            },
+            "retry2h":{
+                "id": 3,
+                "failureGroupId": "gateway-listener-group-dev-failure-3",
+                "failureTopicName": "failure-queue-retry2h",
+                "delay": 7200000
+            }
+        },
+        "healthTopicName": "healthcheck-topic",
+        "inputTopicName": "gateway-listener-input",
+        "clientId": "gateway-listener-consumer-dev",
+        "inputGroupId": "gateway-listener-group-dev",
+        "brokers": "localhost:9092,localhost:9093",
+        "proxyEnabled": false,
+        "proxyBrokersPorts": "19092,19093",
+        "keepAliveDelay": 60000,
+        "proxyHost": "127.0.0.1",
+        "proxyConnectionTimeout": 5000,
+        "securityProtocol": "sasl_ssl",
+        "sasl": {
+            "mechanisms": "plain",
+            "username": "token",
+            "password": "password"
+        },
+        "retry": {
+            "initialRetryTime": 300,
+            "retries": 5
+        },
+        "numPartitionsForInputTopic": 3,
+        "maxBytesPerPartitionForConsumer": 4000,
+        "sessionTimeoutForConsumer": 60000
+    },
+    "appID": {
+        "retries": 1,
+        "retryDelay": 3000,
+        "timeout": 10000
+    },
+    "keyProtect": {
+        "retries": 1,
+        "retryDelay": 3000,
+        "timeout": 10000
+    },
+    "databaseConfig": {
+        "connection": {
+            "url": "cloudant-url",
+            "username": "cloudant-username",
+            "password": "cloudant-password",
+            "account": "",
+            "iamApiKey": "",
+            "timeout": 5000
+        },
+        "dbNameFailures": "failures",
+        "dbNameConsentStatus": "consent-status",
+        "dbPartitionKey": "cm"
+    },
+    "defaults" : {
+        "registerConsent": {
+            "name": "Default Name",
+            "secret": "Welcome!23",
+            "email": "default@local"
+        }
+    }
+}
